@@ -172,11 +172,13 @@ function s:handler.onModeEnterPost()
         \                            'onCr(' . s:OPEN_TYPE_DELETE . ')')
   let self.items = range(1, bufnr('$'))
   call filter(self.items, 'buflisted(v:val) && v:val != self.bufNrPrev && v:val != bufnr("%")')
+  " Add the current buffer last.
   call map(self.items, 's:makeItem(v:val)')
   if g:fuf_buffer_mruOrder
     call sort(self.items, 's:compareTimeDescending')
     call fuf#mapToSetSerialIndex(self.items, 1)
   endif
+  call add(self.items, s:makeItem(self.bufNrPrev))
   let self.items = fuf#mapToSetAbbrWithSnippedWordAsPath(self.items)
 endfunction
 
